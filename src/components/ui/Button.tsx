@@ -2,36 +2,39 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
-  children: React.ReactNode;
+  variant?: 'primary' | 'secondary' | 'ghost' | 'outline';
+  size?: 'sm' | 'md' | 'lg' | 'icon';
+  children?: React.ReactNode;
   icon?: React.ReactNode;
 }
 
-export const Button: React.FC<ButtonProps> = ({
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
   variant = 'primary',
   size = 'md',
   children,
   icon,
   className,
   ...props
-}) => {
+}, ref) => {
   const baseClasses = 'justify-center items-center flex gap-2 font-medium leading-5 rounded-md transition-colors';
   
   const variantClasses = {
     primary: 'bg-zinc-900 text-neutral-50 shadow-[0_1px_3px_0_rgba(0,0,0,0.10),0_1px_2px_0_rgba(0,0,0,0.06)] hover:bg-zinc-800',
     secondary: 'bg-neutral-50 text-zinc-900 hover:bg-gray-100',
-    ghost: 'bg-transparent text-zinc-900 hover:bg-gray-100'
+    ghost: 'bg-transparent text-zinc-900 hover:bg-gray-100',
+    outline: 'border border-gray-300 bg-transparent text-zinc-900 hover:bg-gray-100'
   };
 
   const sizeClasses = {
     sm: 'min-h-9 h-9 px-4 py-2 text-sm',
     md: 'min-h-10 h-10 px-4 py-2 text-sm',
-    lg: 'min-h-11 h-11 px-6 py-3 text-base'
+    lg: 'min-h-11 h-11 px-6 py-3 text-base',
+    icon: 'h-10 w-10 p-0'
   };
 
   return (
     <button
+      ref={ref}
       className={cn(
         baseClasses,
         variantClasses[variant],
@@ -40,8 +43,10 @@ export const Button: React.FC<ButtonProps> = ({
       )}
       {...props}
     >
-      <span className="self-stretch my-auto">{children}</span>
+      {children && <span className="self-stretch my-auto">{children}</span>}
       {icon && <span className="self-stretch shrink-0 my-auto">{icon}</span>}
     </button>
   );
-};
+});
+
+Button.displayName = "Button";
